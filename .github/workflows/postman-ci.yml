@@ -1,27 +1,22 @@
-name: 🔁 Run Postman API Tests
+name: 🧪 Run Postman Tests
 
 on:
   push:
-    branches: [ main ]   # Replace with "master" if that's your branch
-  workflow_dispatch:     # For manual run
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   run-postman-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Code
+      - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
-      - name: 📦 Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: 📦 Install Newman & Reporter
+      - name: 📁 List project files (Debug Step)
         run: |
-          npm install -g newman
-          npm install -g newman-reporter-htmlextra
+          echo "📂 Root Directory:"
+          ls -R
 
       - name: 🧪 Run Postman Tests
         run: |
@@ -30,9 +25,4 @@ jobs:
           -r htmlextra \
           --reporter-htmlextra-export reports/final-report.html
 
-      - name: 📤 Upload Report as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Postman-HTML-Report
-          path: reports/final-report.html
 
