@@ -31,7 +31,8 @@ jobs:
           --reporter-htmlextra-export reports/final-report.html
 
       - name: 📤 Upload Report as Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Postman-HTML-Report
           path: reports/final-report.html
+
