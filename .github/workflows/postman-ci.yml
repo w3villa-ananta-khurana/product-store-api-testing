@@ -1,0 +1,37 @@
+name: 🔁 Run Postman API Tests
+
+on:
+  push:
+    branches: [ main ]   # Replace with "master" if that's your branch
+  workflow_dispatch:     # For manual run
+
+jobs:
+  run-postman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 📦 Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Install Newman & Reporter
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      - name: 🧪 Run Postman Tests
+        run: |
+          newman run collection/ProductStore.postman_collection.json \
+          -d data/orders.csv \
+          -r htmlextra \
+          --reporter-htmlextra-export reports/final-report.html
+
+      - name: 📤 Upload Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Postman-HTML-Report
+          path: reports/final-report.html
