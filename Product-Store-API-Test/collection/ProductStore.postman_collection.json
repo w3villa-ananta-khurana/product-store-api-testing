@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "5f0b75fc-a923-43bf-9c46-0bd8e3e26bc4",
+		"name": "Product Store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45732013",
+		"_collection_link": "https://anantakhurana-8355889.postman.co/workspace/learning-api-testing~ba4573d6-9514-4602-84e3-9eec42242cd7/collection/45732013-5f0b75fc-a923-43bf-9c46-0bd8e3e26bc4?action=share&source=collection_link&creator=45732013"
+	},
+	"item": [
+		{
+			"name": "Get All Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json();\r",
+							"\r",
+							"// ✅ Status code check\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// ✅ Manual checks (fine-grain control)\r",
+							"pm.test(\"Response has 'products'\", function () {\r",
+							"    pm.expect(res).to.have.property(\"products\");\r",
+							"    pm.expect(res.products).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each product has correct keys\", function () {\r",
+							"    res.products.forEach(product => {\r",
+							"        pm.expect(product).to.have.all.keys(\"id\", \"name\", \"category\", \"price\", \"available\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// ✅ Schema validation (clean contract testing)\r",
+							"const schema = {\r",
+							"  type: \"object\",\r",
+							"  properties: {\r",
+							"    products: {\r",
+							"      type: \"array\",\r",
+							"      items: {\r",
+							"        type: \"object\",\r",
+							"        properties: {\r",
+							"          id: { type: \"number\" },\r",
+							"          name: { type: \"string\" },\r",
+							"          category: { type: \"string\" },\r",
+							"          price: { type: \"number\" },\r",
+							"          available: { type: \"boolean\" }\r",
+							"        },\r",
+							"        required: [\"id\", \"name\", \"category\", \"price\", \"available\"]\r",
+							"      }\r",
+							"    }\r",
+							"  },\r",
+							"  required: [\"products\"]\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Schema Validation - Product List\", function () {\r",
+							"  pm.expect(tv4.validate(res, schema)).to.be.true;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fe62952c-8f10-4543-a3bd-46c57aa77db8.mock.pstmn.io/products",
+					"protocol": "https",
+					"host": [
+						"fe62952c-8f10-4543-a3bd-46c57aa77db8",
+						"mock",
+						"pstmn",
+						"io"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Products",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://example.com/products",
+							"protocol": "https",
+							"host": [
+								"example",
+								"com"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "{\r\n  \"products\": [\r\n    {\r\n      \"id\": 201,\r\n      \"name\": \"Wireless Mouse\",\r\n      \"category\": \"Electronics\",\r\n      \"price\": 799,\r\n      \"available\": true\r\n    },\r\n    {\r\n      \"id\": 202,\r\n      \"name\": \"Cotton T-Shirt\",\r\n      \"category\": \"Clothing\",\r\n      \"price\": 499,\r\n      \"available\": true\r\n    },\r\n    {\r\n      \"id\": 203,\r\n      \"name\": \"Coffee Mug\",\r\n      \"category\": \"Home\",\r\n      \"price\": 299,\r\n      \"available\": false\r\n    }\r\n  ]\r\n}\r\n"
+				}
+			]
+		},
+		{
+			"name": "Place order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json();\r",
+							"\r",
+							"// ✅ Status code check\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"// ✅ Schema validation\r",
+							"const schema = {\r",
+							"  type: \"object\",\r",
+							"  properties: {\r",
+							"    orderId: { type: \"number\" },\r",
+							"    status: { type: \"string\" },\r",
+							"    amount: { type: \"number\" },\r",
+							"    message: { type: \"string\" }\r",
+							"  },\r",
+							"  required: [\"orderId\", \"status\", \"amount\", \"message\"]\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Schema Validation - Order Response\", function () {\r",
+							"  pm.expect(tv4.validate(res, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"orderId\": 555,\r\n  \"status\": \"confirmed\",\r\n  \"amount\": 1598,\r\n  \"message\": \"Order placed successfully\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fe62952c-8f10-4543-a3bd-46c57aa77db8.mock.pstmn.io/order",
+					"protocol": "https",
+					"host": [
+						"fe62952c-8f10-4543-a3bd-46c57aa77db8",
+						"mock",
+						"pstmn",
+						"io"
+					],
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Place order",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://example.com/order",
+							"protocol": "https",
+							"host": [
+								"example",
+								"com"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "{\n    \"orderId\": 555,\n    \"status\": \"confirmed\",\n    \"amount\": 1598,\n    \"message\": \"Order placed successfully\"\n}"
+				}
+			]
+		}
+	]
+}
